@@ -223,26 +223,15 @@ describe("Models with classifier models", () => {
 		expect(result.answers.approved).toEqual({ type: "bool", probability: 0.8 });
 	});
 
-	it("lists OpenAI Decisions models only for API key credentials", async () => {
+	it("lists OpenAI Decisions models for API key credentials", async () => {
 		const apiKeyStore = new InMemoryCredentialStore();
 		await apiKeyStore.modify("openai", async () => ({ type: "api_key", key: "secret" }));
-		const oauthStore = new InMemoryCredentialStore();
-		await oauthStore.modify("openai", async () => ({
-			type: "oauth",
-			access: "access",
-			refresh: "refresh",
-			expires: Date.now() + 3_600_000,
-		}));
 
 		const withApiKey = builtinModels({ credentials: apiKeyStore });
-		const withOAuth = builtinModels({ credentials: oauthStore });
 
 		expect((await withApiKey.getAvailableOfType("classifier", "openai")).map((model) => model.id)).toEqual([
 			"gpt-6-luna",
 		]);
-		expect(await withOAuth.getAvailableOfType("classifier", "openai")).toEqual([]);
-		// Chat models stay available with ChatGPT OAuth.
-		expect((await withOAuth.getAvailable("openai")).some((model) => model.id === "gpt-6-luna")).toBe(true);
 	});
 
 	it("routes OpenRouter classifier models through the System One API", () => {

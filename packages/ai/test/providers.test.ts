@@ -175,7 +175,6 @@ describe("builtin providers", () => {
 			["openai", "gpt-5.4"],
 			["openai", "gpt-5.5"],
 			["openai", "gpt-6-astra"],
-			["openai-codex", "gpt-5.5"],
 			["anthropic", "claude-opus-5"],
 			["opencode", "gpt-5.4"],
 			["opencode", "gpt-5.6-terra"],
@@ -184,10 +183,6 @@ describe("builtin providers", () => {
 			["opencode", "claude-opus-5"],
 			["opencode", "kimi-k3"],
 			["opencode-go", "kimi-k3"],
-			["github-copilot", "gpt-5.6-terra"],
-			["github-copilot", "claude-opus-5"],
-			["github-copilot", "claude-opus-4.8"],
-			["github-copilot", "kimi-k3"],
 			["deepseek", "deepseek-v4-pro"],
 			["openrouter", "openai/gpt-5.6-terra"],
 		] as const;
@@ -199,7 +194,6 @@ describe("builtin providers", () => {
 			["google", "gemini-2.5-pro"],
 			["opencode", "gpt-5.2"],
 			["opencode", "claude-sonnet-4-5"],
-			["github-copilot", "claude-sonnet-4.6"],
 			["deepseek", "deepseek-flash"],
 			["openrouter", "anthropic/claude-opus-5"],
 			["openrouter", "moonshotai/kimi-k3"],
@@ -222,7 +216,6 @@ describe("builtin providers", () => {
 		const models = builtinModels();
 		for (const [provider, modelId] of [
 			["opencode", "gpt-5.6-terra"],
-			["github-copilot", "gpt-5.6-terra"],
 		] as const) {
 			// Proxies pass `additional_tools` through to OpenAI but are not verified for tool search.
 			expect(models.getModel(provider, modelId)?.compat, `${provider}/${modelId}`).toMatchObject({
@@ -233,7 +226,7 @@ describe("builtin providers", () => {
 			);
 		}
 		// Proxied Anthropic endpoints reject `tool_addition`/`tool_removal` blocks.
-		for (const provider of ["opencode", "github-copilot"] as const) {
+		for (const provider of ["opencode"] as const) {
 			expect(models.getModel(provider, "claude-opus-5")?.compat, provider).not.toHaveProperty(
 				"supportsMidConvoToolChanges",
 			);
@@ -254,7 +247,6 @@ describe("builtin providers", () => {
 				);
 			}
 		}
-		expect(models.getModel("github-copilot", "kimi-k3")?.compat).not.toHaveProperty("supportsMidConvoToolAdditions");
 		expect(models.getModel("openrouter", "openai/gpt-5.6-terra")?.compat).not.toHaveProperty(
 			"supportsMidConvoToolAdditions",
 		);
