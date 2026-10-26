@@ -28,8 +28,6 @@ export type KnownImageApi = "openrouter-images";
 export type ImageApi = KnownImageApi | (string & {});
 
 export type KnownClassifierApi =
-	| "typesafe-system-one"
-	| "cloudflare-workers-ai-system-one"
 	| "llama-cpp-classify"
 	| "openai-decisions";
 
@@ -43,7 +41,6 @@ export type KnownProvider =
 	| "google-vertex"
 	| "openai"
 	| "azure"
-	| "typesafe"
 	| "nvidia"
 	| "deepseek"
 	| "xai"
