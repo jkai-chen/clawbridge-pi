@@ -5,6 +5,7 @@
 //    removed path comes back.
 // 3. Every http(s) host named in the built packages (.js, .mjs, .cjs and .json, so provider data
 //    counts) must be in scripts/outbound-hosts.txt: a new endpoint shows up in review.
+// 4. The package copies of LICENSE and NOTICE.md match the root files.
 // Run after `npm run build`. `--write-hosts` regenerates the allow-list; commit it only as a reviewed diff.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -49,6 +50,12 @@ export function checkStrip(root) {
 		const deps = existsSync(manifest) ? (JSON.parse(readFileSync(manifest, "utf8")).dependencies ?? {}) : {};
 		for (const name of Object.keys(deps)) {
 			if (/telemetry|pi-coding-agent|pi-tui|pi-mcp/.test(name)) errors.push(`${pkg} depends on ${name}`);
+		}
+		for (const f of ["LICENSE", "NOTICE.md"]) {
+			const copy = join(root, "packages", pkg, f);
+			if (!existsSync(copy) || readFileSync(copy, "utf8") !== readFileSync(join(root, f), "utf8")) {
+				errors.push(`packages/${pkg}/${f} must be an exact copy of the root ${f}`);
+			}
 		}
 	}
 	const idPattern = new RegExp(`["'\`](${REMOVED_PROVIDER_IDS.join("|")})["'\`]`, "g");

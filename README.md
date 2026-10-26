@@ -1,3 +1,6 @@
+> **ClawBridge fork.** This is a stripped-down fork of pi for ClawBridge's dispatcher agent: only `pi-ai` and
+> `pi-agent-core` remain. See `NOTICE.md` for what it removes. Upstream: https://github.com/earendil-works/pi.
+
 <p align="center">
   <a href="https://pi.dev">
     <img alt="pi logo" src="https://pi.dev/logo-auto.svg" width="128">
