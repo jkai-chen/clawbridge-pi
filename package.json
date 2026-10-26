@@ -8,9 +8,12 @@
 	],
 	"scripts": {
 		"clean": "npm run clean --workspaces",
-		"build": "npm --prefix packages/ai run build:offline && npm --prefix packages/agent run build",
+		"build": "npm run clean && npm --prefix packages/ai run build:offline && npm --prefix packages/agent run build",
 		"check": "tsc --noEmit",
-		"test": "npm run test --workspaces --if-present"
+		"test": "npm run test:scripts && npm run test --workspaces --if-present",
+		"check:strip": "node scripts/check-strip.mjs",
+		"check:lock-age": "node scripts/check-lock-age.mjs",
+		"test:scripts": "node --test scripts/*.test.mjs"
 	},
 	"devDependencies": {
 		"@types/node": "22.19.19",
