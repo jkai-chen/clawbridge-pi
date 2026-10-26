@@ -35,21 +35,10 @@
 			"types": "./dist/utils/*.d.ts",
 			"import": "./dist/utils/*.js"
 		},
-		"./oauth": {
-			"types": "./dist/oauth.d.ts",
-			"import": "./dist/oauth.js"
-		},
 		"./bedrock-provider": {
 			"types": "./dist/bedrock-provider.d.ts",
 			"import": "./dist/bedrock-provider.js"
-		},
-		"./bun-oauth": {
-			"types": "./dist/bun-oauth.d.ts",
-			"import": "./dist/bun-oauth.js"
 		}
-	},
-	"bin": {
-		"pi-ai": "dist/cli.js"
 	},
 	"files": [
 		"dist",

@@ -12,7 +12,6 @@ import { cloudflareWorkersAIProvider } from "./cloudflare-workers-ai.ts";
 import modelDataManifest from "./data/.manifest.json" with { type: "json" };
 import { deepseekProvider } from "./deepseek.ts";
 import { fireworksProvider } from "./fireworks.ts";
-import { githubCopilotProvider } from "./github-copilot.ts";
 import { googleProvider } from "./google.ts";
 import { googleVertexProvider } from "./google-vertex.ts";
 import { groqProvider } from "./groq.ts";
@@ -26,14 +25,12 @@ import { moonshotaiProvider } from "./moonshotai.ts";
 import { moonshotaiCnProvider } from "./moonshotai-cn.ts";
 import { nvidiaProvider } from "./nvidia.ts";
 import { openaiProvider } from "./openai.ts";
-import { openaiCodexProvider } from "./openai-codex.ts";
 import { opencodeProvider } from "./opencode.ts";
 import { opencodeGoProvider } from "./opencode-go.ts";
 import { openrouterProvider } from "./openrouter.ts";
 import { qwenTokenPlanProvider } from "./qwen-token-plan.ts";
 import { qwenTokenPlanCnProvider } from "./qwen-token-plan-cn.ts";
 import { qwenTokenPlanIndividualProvider } from "./qwen-token-plan-individual.ts";
-import { radiusProvider } from "./radius.ts";
 import { togetherProvider } from "./together.ts";
 import { typesafeProvider } from "./typesafe.ts";
 import { vercelAIGatewayProvider } from "./vercel-ai-gateway.ts";
@@ -44,8 +41,6 @@ import { xiaomiTokenPlanCnProvider } from "./xiaomi-token-plan-cn.ts";
 import { xiaomiTokenPlanSgpProvider } from "./xiaomi-token-plan-sgp.ts";
 import { zaiProvider } from "./zai.ts";
 import { zaiCodingCnProvider } from "./zai-coding-cn.ts";
-
-export { radiusProvider };
 
 /** Providers present in the generated catalog. `KnownProvider` additionally
  * includes purely dynamic providers (e.g. "radius") that have no static
@@ -145,7 +140,6 @@ export function builtinProviders(): Provider[] {
 		cloudflareWorkersAIProvider(),
 		deepseekProvider(),
 		fireworksProvider(),
-		githubCopilotProvider(),
 		googleProvider(),
 		googleVertexProvider(),
 		groqProvider(),
@@ -159,14 +153,12 @@ export function builtinProviders(): Provider[] {
 		moonshotaiCnProvider(),
 		nvidiaProvider(),
 		openaiProvider(),
-		openaiCodexProvider(),
 		opencodeProvider(),
 		opencodeGoProvider(),
 		openrouterProvider(),
 		qwenTokenPlanProvider(),
 		qwenTokenPlanCnProvider(),
 		qwenTokenPlanIndividualProvider(),
-		radiusProvider(),
 		togetherProvider(),
 		typesafeProvider(),
 		vercelAIGatewayProvider(),
