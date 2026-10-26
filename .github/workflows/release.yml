@@ -24,6 +24,8 @@ jobs:
       - run: npm run build
       - run: npm run check
       - run: npm run check:strip
+      - run: npm run check:lock-age
+      - run: npm audit --omit=dev --audit-level=high
       - run: npm test
       - name: Pack
         run: |
