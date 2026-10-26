@@ -3,7 +3,6 @@ import { streamSimple as streamAnthropic } from "../src/api/anthropic-messages.t
 import { streamSimple as streamAzure } from "../src/api/azure-openai-responses.ts";
 import { streamSimple as streamGoogle } from "../src/api/google-generative-ai.ts";
 import { streamSimple as streamMistral } from "../src/api/mistral-conversations.ts";
-import { streamSimple as streamCodex } from "../src/api/openai-codex-responses.ts";
 import { streamSimple as streamOpenAICompletions } from "../src/api/openai-completions.ts";
 import { streamSimple as streamOpenAIResponses } from "../src/api/openai-responses.ts";
 import type { Api, AssistantMessageEventStream, Model } from "../src/types.ts";
@@ -35,7 +34,6 @@ describe("direct API authentication", () => {
 		expectMissingAuthThrows(() => streamAzure(model("azure-openai-responses"), context, {}));
 		expectMissingAuthThrows(() => streamGoogle(model("google-generative-ai"), context, {}));
 		expectMissingAuthThrows(() => streamMistral(model("mistral-conversations"), context, {}));
-		expectMissingAuthThrows(() => streamCodex(model("openai-codex-responses"), context, {}));
 		expectMissingAuthThrows(() => streamOpenAICompletions(model("openai-completions"), context, {}));
 		expectMissingAuthThrows(() => streamOpenAIResponses(model("openai-responses"), context, {}));
 	});
