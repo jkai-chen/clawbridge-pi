@@ -27,9 +27,7 @@ export type KnownImageApi = "openrouter-images";
 
 export type ImageApi = KnownImageApi | (string & {});
 
-export type KnownClassifierApi =
-	| "llama-cpp-classify"
-	| "openai-decisions";
+export type KnownClassifierApi = never;
 
 export type ClassifierApi = KnownClassifierApi | (string & {});
 

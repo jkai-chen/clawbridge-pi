@@ -27,9 +27,14 @@ export const REMOVED_PATHS = [
 	"packages/ai/src/providers/typesafe.ts", "packages/ai/src/providers/typesafe.models.ts",
 	"packages/ai/src/providers/data/typesafe.json", "packages/ai/src/api/typesafe-system-one.ts",
 	"packages/ai/src/api/cloudflare-workers-ai-system-one.ts", "packages/ai/src/api/system-one-shared.ts",
+	"packages/ai/src/api/classifier-shared.ts", "packages/ai/src/api/llama-cpp-classify.ts",
+	"packages/ai/src/api/openai-decisions.ts",
 ];
 export const REMOVED_PROVIDER_IDS = ["github-copilot", "openai-codex", "radius", "typesafe"];
-export const REMOVED_APIS = ["pi-messages", "openai-codex-responses", "typesafe-system-one", "cloudflare-workers-ai-system-one"];
+export const REMOVED_APIS = [
+	"pi-messages", "openai-codex-responses", "typesafe-system-one", "cloudflare-workers-ai-system-one",
+	"llama-cpp-classify", "openai-decisions",
+];
 const PACKAGES = ["ai", "agent"];
 const SCANNED = /\.(js|mjs|cjs|json)$/;
 

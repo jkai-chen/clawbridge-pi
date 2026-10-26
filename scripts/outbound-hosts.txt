@@ -26,7 +26,6 @@ bedrock-runtime.us-east-1.amazonaws.com
 cchistory.mariozechner.at
 cloud.google.com
 developers.cloudflare.com
-developers.openai.com
 docs.aws.amazon.com
 gateway.ai.cloudflare.com
 generativelanguage.googleapis.com
