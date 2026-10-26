@@ -6,6 +6,8 @@
 // 3. Every http(s) host named in the built packages (.js, .mjs, .cjs and .json, so provider data
 //    counts) must be in scripts/outbound-hosts.txt: a new endpoint shows up in review.
 // 4. The package copies of LICENSE and NOTICE.md match the root files.
+// 5. .github/workflows holds only the fork's ci.yml and release.yml: an upstream workflow brought back by a rebase
+//    would run on this repo with its token (cb/* is the default branch).
 // Run after `npm run build`. `--write-hosts` regenerates the allow-list; commit it only as a reviewed diff.
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -35,6 +37,7 @@ export const REMOVED_APIS = [
 	"pi-messages", "openai-codex-responses", "typesafe-system-one", "cloudflare-workers-ai-system-one",
 	"llama-cpp-classify", "openai-decisions",
 ];
+export const ALLOWED_WORKFLOWS = ["ci.yml", "release.yml"];
 const PACKAGES = ["ai", "agent"];
 const SCANNED = /\.(js|mjs|cjs|json)$/;
 
@@ -62,6 +65,11 @@ export function checkStrip(root) {
 				errors.push(`packages/${pkg}/${f} must be an exact copy of the root ${f}`);
 			}
 		}
+	}
+	const workflows = join(root, ".github", "workflows");
+	const present = existsSync(workflows) ? readdirSync(workflows) : [];
+	for (const name of present) {
+		if (!ALLOWED_WORKFLOWS.includes(name)) errors.push(`workflow not from this fork: .github/workflows/${name}`);
 	}
 	const idPattern = new RegExp(`["'\`](${REMOVED_PROVIDER_IDS.join("|")})["'\`]`, "g");
 	const apiPattern = new RegExp(`["'\`](${REMOVED_APIS.join("|")})["'\`]`, "g");

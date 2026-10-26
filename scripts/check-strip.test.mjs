@@ -17,6 +17,9 @@ function fixture() {
 	writeFileSync(join(root, "LICENSE"), "MIT\n");
 	writeFileSync(join(root, "NOTICE.md"), "notice\n");
 	mkdirSync(join(root, "scripts"));
+	mkdirSync(join(root, ".github", "workflows"), { recursive: true });
+	writeFileSync(join(root, ".github", "workflows", "ci.yml"), "name: ci\n");
+	writeFileSync(join(root, ".github", "workflows", "release.yml"), "name: release\n");
 	writeFileSync(join(root, "scripts", "outbound-hosts.txt"), "# allow-list\napi.example.com\n");
 	for (const pkg of ["ai", "agent"]) {
 		const dir = join(root, "packages", pkg);
@@ -85,4 +88,10 @@ test("a licence copy that drifts fails", () => {
 	const root = fixture();
 	writeFileSync(join(root, "packages/agent/LICENSE"), "changed\n");
 	assert.match(checkStrip(root).errors.join("\n"), /packages\/agent\/LICENSE must be an exact copy/);
+});
+
+test("an upstream workflow brought back fails", () => {
+	const root = fixture();
+	writeFileSync(join(root, ".github/workflows/pr-gate.yml"), "on: pull_request_target\n");
+	assert.match(checkStrip(root).errors.join("\n"), /workflow not from this fork: \.github\/workflows\/pr-gate\.yml/);
 });
