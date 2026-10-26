@@ -107,19 +107,14 @@ describe("Models with classifier models", () => {
 		expect(result.errorMessage).toContain("is not a classifier model");
 	});
 
-	it.each([
-		["vercel-ai-gateway", "typesafe-ai/jev"],
-		["opencode", "jev-1.13"],
-	])("lists %s Jev (%s) but has no System One transport", async (provider, id) => {
-		// The fork removes the typesafe-system-one transport: listing only, no request is made.
-		const models = builtinModels();
-		const jev = models.getModelOfType("classifier", provider, id);
-		if (!jev) throw new Error(`missing ${provider} Jev model`);
-		const fetch = vi.fn();
-		const result = await models.classify(jev, context, { apiKey: "secret", fetch });
-		expect(result.stopReason).toBe("error");
-		expect(fetch).not.toHaveBeenCalled();
-	});
+	it.each(["openrouter", "opencode", "vercel-ai-gateway", "cloudflare-workers-ai"] as const)(
+		"lists no System One classifier models for %s",
+		(provider) => {
+			// The fork removes the System One classifier protocol and its catalogue entries.
+			expect(getBuiltinClassifierModels(provider)).toEqual([]);
+			expect(builtinModels().getModelsOfType("classifier", provider)).toEqual([]);
+		},
+	);
 
 	it("rejects images for classifier models without image input before calling the provider", async () => {
 		const classifier = classifierModel("test", "text-only");
@@ -190,14 +185,5 @@ describe("Models with classifier models", () => {
 		expect((await withApiKey.getAvailableOfType("classifier", "openai")).map((model) => model.id)).toEqual([
 			"gpt-6-luna",
 		]);
-	});
-
-	it("routes OpenRouter classifier models through the System One API", () => {
-		const models = builtinModels();
-		for (const model of getBuiltinClassifierModels("openrouter")) {
-			expect(model).toMatchObject({ api: "typesafe-system-one", baseUrl: "https://openrouter.ai/api/v1" });
-			expect(models.getModel("openrouter", model.id)).toBeUndefined();
-			expect(models.getModelOfType("classifier", "openrouter", model.id)).toEqual(model);
-		}
 	});
 });

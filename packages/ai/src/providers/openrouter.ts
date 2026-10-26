@@ -2,7 +2,7 @@ import { anthropicMessagesApi } from "../api/anthropic-messages.lazy.ts";
 import { openAICompletionsApi } from "../api/openai-completions.lazy.ts";
 import { envApiKeyAuth } from "../auth/helpers.ts";
 import { createProvider, type Provider } from "../models.ts";
-import { OPENROUTER_CLASSIFIER_MODELS, OPENROUTER_IMAGE_MODELS, OPENROUTER_MODELS } from "./openrouter.models.ts";
+import { OPENROUTER_IMAGE_MODELS, OPENROUTER_MODELS } from "./openrouter.models.ts";
 
 export function openrouterProvider(): Provider<"anthropic-messages" | "openai-completions"> {
 	return createProvider<"anthropic-messages" | "openai-completions">({
@@ -15,7 +15,6 @@ export function openrouterProvider(): Provider<"anthropic-messages" | "openai-co
 		models: [
 			...Object.values(OPENROUTER_MODELS),
 			...Object.values(OPENROUTER_IMAGE_MODELS),
-			...Object.values(OPENROUTER_CLASSIFIER_MODELS),
 		],
 		api: {
 			"anthropic-messages": anthropicMessagesApi(),
