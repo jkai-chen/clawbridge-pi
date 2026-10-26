@@ -3,13 +3,12 @@
 	"private": true,
 	"type": "module",
 	"workspaces": [
-		"packages/telemetry",
 		"packages/ai",
 		"packages/agent"
 	],
 	"scripts": {
 		"clean": "npm run clean --workspaces",
-		"build": "npm --prefix packages/telemetry run build && npm --prefix packages/ai run build:offline && npm --prefix packages/agent run build",
+		"build": "npm --prefix packages/ai run build:offline && npm --prefix packages/agent run build",
 		"check": "tsc --noEmit",
 		"test": "npm run test --workspaces --if-present"
 	},
