@@ -18,6 +18,8 @@ It is maintained for ClawBridge's dispatcher agent, which needs only the agent l
 - `streamProxy`, and the `pi-messages`, `openai-codex-responses` and `openrouter-images` APIs;
 - the System One classifier transports (`typesafe-system-one`, `cloudflare-workers-ai-system-one`), the typesafe
   provider, and every catalogue entry that used them;
+- every other classifier transport (`openai-decisions`, `llama-cpp-classify`), their shared code, and OpenAI's
+  classifier catalogue entry: the fork has no classifier transport at all;
 - upstream's GitHub workflows, replaced by this fork's CI and release workflows and checks.
 
 Kept as inert data: the OpenRouter image model entries in the catalogue (listing works; generating an image has no

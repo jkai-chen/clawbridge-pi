@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest";
-import { InMemoryCredentialStore } from "../src/auth/credential-store.ts";
 import { createModels, createProvider, getModelType } from "../src/models.ts";
 import { builtinModels, getBuiltinClassifierModels } from "../src/providers/all.ts";
 import type { Api, ClassifierApi, ClassifierContext, ClassifierModel, ClassifierResult, Model } from "../src/types.ts";
@@ -107,10 +106,10 @@ describe("Models with classifier models", () => {
 		expect(result.errorMessage).toContain("is not a classifier model");
 	});
 
-	it.each(["openrouter", "opencode", "vercel-ai-gateway", "cloudflare-workers-ai"] as const)(
-		"lists no System One classifier models for %s",
+	it.each(["openai", "openrouter", "opencode", "vercel-ai-gateway", "cloudflare-workers-ai"] as const)(
+		"lists no classifier models for %s",
 		(provider) => {
-			// The fork removes the System One classifier protocol and its catalogue entries.
+			// The fork removes every classifier transport and its catalogue entries.
 			expect(getBuiltinClassifierModels(provider)).toEqual([]);
 			expect(builtinModels().getModelsOfType("classifier", provider)).toEqual([]);
 		},
@@ -150,40 +149,4 @@ describe("Models with classifier models", () => {
 		expect(classify).toHaveBeenCalledOnce();
 	});
 
-	it("routes OpenAI GPT-6 Luna through the Decisions API with images", async () => {
-		const models = builtinModels();
-		const luna = models.getModelOfType("classifier", "openai", "gpt-6-luna");
-		if (!luna) throw new Error("missing OpenAI Decisions model");
-		expect(luna).toMatchObject({ api: "openai-decisions", input: ["text", "image"], contextWindow: 922000 });
-		// The chat entry with the same id stays separate.
-		expect(models.getModel("openai", "gpt-6-luna")?.api).toBe("openai-responses");
-
-		const urls: string[] = [];
-		const result = await models.classify(
-			luna,
-			{ ...context, images: [{ type: "image", data: "aW1hZ2U=", mimeType: "image/png" }] },
-			{
-				apiKey: "secret",
-				fetch: async (input) => {
-					urls.push(String(input));
-					return Response.json({ answers: [{ type: "predicate", name: "approved", probability: 0.8 }] });
-				},
-			},
-		);
-
-		expect(urls).toEqual(["https://api.openai.com/v1/decisions"]);
-		expect(result.stopReason).toBe("stop");
-		expect(result.answers.approved).toEqual({ type: "bool", probability: 0.8 });
-	});
-
-	it("lists OpenAI Decisions models for API key credentials", async () => {
-		const apiKeyStore = new InMemoryCredentialStore();
-		await apiKeyStore.modify("openai", async () => ({ type: "api_key", key: "secret" }));
-
-		const withApiKey = builtinModels({ credentials: apiKeyStore });
-
-		expect((await withApiKey.getAvailableOfType("classifier", "openai")).map((model) => model.id)).toEqual([
-			"gpt-6-luna",
-		]);
-	});
 });
