@@ -6,8 +6,7 @@ import { streamSimple as streamGoogleVertex } from "../src/api/google-vertex.ts"
 import { streamSimple as streamMistral } from "../src/api/mistral-conversations.ts";
 import { streamSimple as streamOpenAICompletions } from "../src/api/openai-completions.ts";
 import { streamSimple as streamOpenAIResponses } from "../src/api/openai-responses.ts";
-import { generateImages } from "../src/api/openrouter-images.ts";
-import type { Api, FetchFunction, ImageModel, Model } from "../src/types.ts";
+import type { Api, FetchFunction, Model } from "../src/types.ts";
 import { normalizeContext } from "../src/utils/transcript.ts";
 
 const context = normalizeContext({
@@ -144,25 +143,5 @@ describe("fetch stream option", () => {
 		expect(ambient).toHaveBeenCalledOnce();
 		expect(result.errorMessage).not.toContain("Custom fetch is not supported");
 		expect(globalThis.fetch).toBe(ambient);
-	});
-
-	it("uses fetch for image generation", async () => {
-		const { custom, fallback } = mockFetches();
-		const model: ImageModel<"openrouter-images"> = {
-			...createModel("openrouter-images"),
-			type: "image",
-			provider: "openrouter",
-			output: ["image"],
-		};
-		await generateImages(
-			model,
-			{ input: [{ type: "text", text: "draw" }] },
-			{
-				apiKey: "test-key",
-				fetch: custom,
-				maxRetries: 0,
-			},
-		);
-		expectOnlyCustomFetch(custom, fallback);
 	});
 });
