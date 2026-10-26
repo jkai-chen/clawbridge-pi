@@ -14,11 +14,15 @@ afterEach(() => {
 function fixture() {
 	const root = mkdtempSync(join(tmpdir(), "check-strip-"));
 	roots.push(root);
+	writeFileSync(join(root, "LICENSE"), "MIT\n");
+	writeFileSync(join(root, "NOTICE.md"), "notice\n");
 	mkdirSync(join(root, "scripts"));
 	writeFileSync(join(root, "scripts", "outbound-hosts.txt"), "# allow-list\napi.example.com\n");
 	for (const pkg of ["ai", "agent"]) {
 		const dir = join(root, "packages", pkg);
 		mkdirSync(join(dir, "dist", "providers", "data"), { recursive: true });
+		writeFileSync(join(dir, "LICENSE"), "MIT\n");
+		writeFileSync(join(dir, "NOTICE.md"), "notice\n");
 		writeFileSync(join(dir, "package.json"), JSON.stringify({ dependencies: { typebox: "1.0.0" } }));
 		writeFileSync(join(dir, "dist", "index.js"), 'export const url = "https://api.example.com/v1";\n');
 	}
@@ -75,4 +79,10 @@ test("a telemetry dependency fails", () => {
 		JSON.stringify({ dependencies: { "@earendil-works/pi-telemetry": "1.1.0" } }),
 	);
 	assert.match(checkStrip(root).errors.join("\n"), /ai depends on @earendil-works\/pi-telemetry/);
+});
+
+test("a licence copy that drifts fails", () => {
+	const root = fixture();
+	writeFileSync(join(root, "packages/agent/LICENSE"), "changed\n");
+	assert.match(checkStrip(root).errors.join("\n"), /packages\/agent\/LICENSE must be an exact copy/);
 });
