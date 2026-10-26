@@ -21,10 +21,8 @@ const __dirname = dirname(__filename);
 // Resolve OAuth tokens at module level (async, runs before tests)
 const oauthTokens = await Promise.all([
 	resolveApiKey("anthropic"),
-	resolveApiKey("github-copilot"),
-	resolveApiKey("openai-codex"),
 ]);
-const [anthropicOAuthToken, githubCopilotToken, openaiCodexToken] = oauthTokens;
+const [anthropicOAuthToken] = oauthTokens;
 
 // Calculator tool definition (same as examples)
 // Note: Using StringEnum helper because Google's API doesn't support anyOf/const patterns
@@ -914,7 +912,6 @@ describe("Generate E2E Tests", () => {
 			});
 		},
 	);
-
 	describe.skipIf(!process.env.AI_GATEWAY_API_KEY)(
 		"Vercel AI Gateway Provider (openai/gpt-5.1-codex-max via Anthropic Messages)",
 		() => {
@@ -1392,121 +1389,6 @@ describe("Generate E2E Tests", () => {
 
 		it.skipIf(!anthropicOAuthToken)("should handle image input", { retry: 3 }, async () => {
 			await handleImage(model, { apiKey: anthropicOAuthToken });
-		});
-	});
-
-	describe("GitHub Copilot Provider (gpt-5.3-codex via OpenAI Completions)", () => {
-		const llm = getModel("github-copilot", "gpt-5.3-codex");
-
-		it.skipIf(!githubCopilotToken)("should complete basic text generation", { retry: 3 }, async () => {
-			await basicTextGeneration(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle tool calling", { retry: 3 }, async () => {
-			await handleToolCall(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle streaming", { retry: 3 }, async () => {
-			await handleStreaming(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle thinking", { retry: 2 }, async () => {
-			const thinkingModel = getModel("github-copilot", "gpt-5-mini");
-			await handleThinking(thinkingModel, { apiKey: githubCopilotToken, reasoningEffort: "high" });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle multi-turn with thinking and tools", { retry: 3 }, async () => {
-			const thinkingModel = getModel("github-copilot", "gpt-5-mini");
-			await multiTurn(thinkingModel, { apiKey: githubCopilotToken, reasoningEffort: "high" });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle image input", { retry: 3 }, async () => {
-			await handleImage(llm, { apiKey: githubCopilotToken });
-		});
-	});
-
-	describe("GitHub Copilot Provider (claude-sonnet-4 via Anthropic Messages)", () => {
-		const llm = getModel("github-copilot", "claude-sonnet-4.6");
-
-		it.skipIf(!githubCopilotToken)("should complete basic text generation", { retry: 3 }, async () => {
-			await basicTextGeneration(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle tool calling", { retry: 3 }, async () => {
-			await handleToolCall(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle streaming", { retry: 3 }, async () => {
-			await handleStreaming(llm, { apiKey: githubCopilotToken });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle thinking", { retry: 2 }, async () => {
-			await handleThinking(llm, { apiKey: githubCopilotToken, thinkingEnabled: true });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle multi-turn with thinking and tools", { retry: 3 }, async () => {
-			await multiTurn(llm, { apiKey: githubCopilotToken, thinkingEnabled: true });
-		});
-
-		it.skipIf(!githubCopilotToken)("should handle image input", { retry: 3 }, async () => {
-			await handleImage(llm, { apiKey: githubCopilotToken });
-		});
-	});
-
-	describe("OpenAI Codex Provider (gpt-5.5)", () => {
-		const llm = getModel("openai-codex", "gpt-5.5");
-
-		it.skipIf(!openaiCodexToken)("should complete basic text generation", { retry: 3 }, async () => {
-			await basicTextGeneration(llm, { apiKey: openaiCodexToken });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle tool calling", { retry: 3 }, async () => {
-			await handleToolCall(llm, { apiKey: openaiCodexToken });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle streaming", { retry: 3 }, async () => {
-			await handleStreaming(llm, { apiKey: openaiCodexToken });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle thinking with reasoningEffort xhigh", { retry: 3 }, async () => {
-			await handleThinking(llm, { apiKey: openaiCodexToken, reasoningEffort: "xhigh" });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle multi-turn with thinking and tools", { retry: 3 }, async () => {
-			await multiTurn(llm, { apiKey: openaiCodexToken, reasoningEffort: "xhigh" });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle image input", { retry: 3 }, async () => {
-			await handleImage(llm, { apiKey: openaiCodexToken });
-		});
-	});
-
-	describe("OpenAI Codex Provider (gpt-5.5 via WebSocket)", () => {
-		const llm = getModel("openai-codex", "gpt-5.5");
-		const wsOptions = { apiKey: openaiCodexToken, transport: "websocket" as const };
-
-		it.skipIf(!openaiCodexToken)("should complete basic text generation", { retry: 3 }, async () => {
-			await basicTextGeneration(llm, wsOptions);
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle tool calling", { retry: 3 }, async () => {
-			await handleToolCall(llm, wsOptions);
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle streaming", { retry: 3 }, async () => {
-			await handleStreaming(llm, wsOptions);
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle thinking with reasoningEffort xhigh", { retry: 3 }, async () => {
-			await handleThinking(llm, { ...wsOptions, reasoningEffort: "xhigh" });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle multi-turn with thinking and tools", { retry: 3 }, async () => {
-			await multiTurn(llm, { ...wsOptions, reasoningEffort: "xhigh" });
-		});
-
-		it.skipIf(!openaiCodexToken)("should handle image input", { retry: 3 }, async () => {
-			await handleImage(llm, wsOptions);
 		});
 	});
 

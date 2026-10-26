@@ -71,10 +71,6 @@ function hasVertexAdcCredentials(env?: ProviderEnv): boolean {
 }
 
 function getApiKeyEnvVars(provider: string): readonly string[] | undefined {
-	if (provider === "github-copilot") {
-		return ["COPILOT_GITHUB_TOKEN"];
-	}
-
 	// ANTHROPIC_AUTH_TOKEN participates in env discovery/status, but
 	// getEnvApiKey() skips it because requests must pass it as Authorization: Bearer.
 	if (provider === "anthropic") {
@@ -96,7 +92,6 @@ function getApiKeyEnvVars(provider: string): readonly string[] | undefined {
 		cerebras: "CEREBRAS_API_KEY",
 		xai: "XAI_API_KEY",
 		typesafe: "TYPESAFE_API_KEY",
-		radius: "RADIUS_API_KEY",
 		openrouter: "OPENROUTER_API_KEY",
 		"vercel-ai-gateway": "AI_GATEWAY_API_KEY",
 		zai: "ZAI_API_KEY",
