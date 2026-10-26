@@ -386,7 +386,7 @@ describe("Models with image models", () => {
 		expect(getBuiltinImageModel("openrouter", "black-forest-labs/flux.2-pro").type).toBe("image");
 	});
 
-	it("builtinModels exposes OpenRouter image models under the openrouter provider", async () => {
+	it("builtinModels lists OpenRouter image models but has no image transport", async () => {
 		const models = builtinModels({ authContext: fakeAuthContext({ OPENROUTER_API_KEY: "or-key" }) });
 		const provider = models.getProvider("openrouter")!;
 		const images = models.getModelsOfType("image", "openrouter");
@@ -405,6 +405,7 @@ describe("Models with image models", () => {
 		// One credential covers both.
 		expect((await models.getAuth(images[0]))?.auth.apiKey).toBe("or-key");
 		expect((await models.getAuth(chat!))?.auth.apiKey).toBe("or-key");
-		expect(provider.generateImages).toBeDefined();
+		// The fork removes the openrouter-images transport: listing only, no generation.
+		expect(provider.generateImages).toBeUndefined();
 	});
 });

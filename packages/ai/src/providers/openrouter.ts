@@ -1,6 +1,5 @@
 import { anthropicMessagesApi } from "../api/anthropic-messages.lazy.ts";
 import { openAICompletionsApi } from "../api/openai-completions.lazy.ts";
-import { openrouterImagesApi } from "../api/openrouter-images.lazy.ts";
 import { typesafeSystemOneApi } from "../api/typesafe-system-one.lazy.ts";
 import { envApiKeyAuth } from "../auth/helpers.ts";
 import { createProvider, type Provider } from "../models.ts";
@@ -23,7 +22,6 @@ export function openrouterProvider(): Provider<"anthropic-messages" | "openai-co
 			"anthropic-messages": anthropicMessagesApi(),
 			"openai-completions": openAICompletionsApi(),
 		},
-		images: { "openrouter-images": openrouterImagesApi() },
 		// OpenRouter serves TypeSafe's System One protocol at /api/v1/systemone.
 		classifiers: { "typesafe-system-one": typesafeSystemOneApi() },
 	});
