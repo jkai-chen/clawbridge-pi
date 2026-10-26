@@ -42,9 +42,7 @@ import { xiaomiTokenPlanSgpProvider } from "./xiaomi-token-plan-sgp.ts";
 import { zaiProvider } from "./zai.ts";
 import { zaiCodingCnProvider } from "./zai-coding-cn.ts";
 
-/** Providers present in the generated catalog. `KnownProvider` additionally
- * includes purely dynamic providers (e.g. "radius") that have no static
- * catalog entry. */
+/** Providers present in the generated catalog. */
 export type BuiltinProvider = keyof typeof MODELS;
 
 type BuiltinChatModelId<TProvider extends BuiltinProvider> = keyof (typeof MODELS)[TProvider];

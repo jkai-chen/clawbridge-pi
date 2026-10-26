@@ -54,23 +54,6 @@ afterEach(() => {
 });
 
 describe("environment API keys", () => {
-	it("does not treat generic GitHub tokens as GitHub Copilot credentials", () => {
-		delete process.env.COPILOT_GITHUB_TOKEN;
-		process.env.GH_TOKEN = "gh-token";
-		process.env.GITHUB_TOKEN = "github-token";
-
-		expect(findEnvKeys("github-copilot")).toBeUndefined();
-		expect(getEnvApiKey("github-copilot")).toBeUndefined();
-	});
-
-	it("resolves GitHub Copilot credentials from COPILOT_GITHUB_TOKEN", () => {
-		process.env.COPILOT_GITHUB_TOKEN = "copilot-token";
-		process.env.GH_TOKEN = "gh-token";
-		process.env.GITHUB_TOKEN = "github-token";
-
-		expect(findEnvKeys("github-copilot")).toEqual(["COPILOT_GITHUB_TOKEN"]);
-		expect(getEnvApiKey("github-copilot")).toBe("copilot-token");
-	});
 
 	it("resolves ZAI China Coding Plan credentials from ZAI_CODING_CN_API_KEY", () => {
 		process.env.ZAI_CODING_CN_API_KEY = "zai-coding-cn-token";

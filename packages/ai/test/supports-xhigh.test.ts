@@ -85,21 +85,6 @@ describe("getSupportedThinkingLevels", () => {
 		expect(getSupportedThinkingLevels(model!)).not.toContain("max");
 	});
 
-	it.each([
-		"gpt-5.5",
-		"gpt-5.6-sol",
-		"gpt-5.6-terra",
-		"gpt-5.6-luna",
-		"gpt-6-astra",
-		"gpt-6-sol",
-		"gpt-6-luna",
-		"gpt-6.1-sol",
-	] as const)("includes xhigh for openai-codex %s models", (modelId) => {
-		const model = getModel("openai-codex", modelId);
-		expect(model).toBeDefined();
-		expect(getSupportedThinkingLevels(model!)).toContain("xhigh");
-	});
-
 	it.each(["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-6-sol", "gpt-6-luna"] as const)(
 		"includes xhigh and max for OpenAI %s models",
 		(modelId) => {
@@ -109,12 +94,11 @@ describe("getSupportedThinkingLevels", () => {
 		},
 	);
 
-	// OpenAI and Codex reject reasoning.effort "none" for GPT-6.1 Sol.
+	// OpenAI rejects reasoning.effort "none" for GPT-6.1 Sol.
 	it("does not support off for GPT-6.1 Sol", () => {
 		const expected = {
 			openai: ["low", "medium", "high", "xhigh", "max"],
 			azure: ["low", "medium", "high", "xhigh", "max"],
-			"openai-codex": ["minimal", "low", "medium", "high", "xhigh", "max"],
 		} as const;
 		for (const [provider, levels] of Object.entries(expected)) {
 			const model = getModel(provider as keyof typeof expected, "gpt-6.1-sol");
@@ -128,8 +112,8 @@ describe("getSupportedThinkingLevels", () => {
 		["gpt-6-sol", { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 }],
 		["gpt-6-luna", { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 }],
 		["gpt-6.1-sol", { input: 2, output: 10, cacheRead: 0.1, cacheWrite: 2.5 }],
-	] as const)("includes official metadata for OpenAI and Codex %s", (modelId, cost) => {
-		for (const provider of ["openai", "openai-codex"] as const) {
+	] as const)("includes official metadata for OpenAI %s", (modelId, cost) => {
+		for (const provider of ["openai"] as const) {
 			const model = getModel(provider, modelId);
 			expect(model).toMatchObject({
 				input: ["text", "image"],
